@@ -343,6 +343,7 @@ def get_config(parse_args=True, cfg_path=None, options=None, can_query_registry=
     # General config
     agentConfig = {
         'check_freq': DEFAULT_CHECK_FREQUENCY,
+        'collect_orchestrator_tags': True,
         'dogstatsd_port': 8125,
         'dogstatsd_target': 'http://localhost:17123',
         'graphite_listen_port': None,
@@ -583,6 +584,10 @@ def get_config(parse_args=True, cfg_path=None, options=None, can_query_registry=
         agentConfig["collect_ec2_tags"] = False
         if config.has_option("Main", "collect_ec2_tags"):
             agentConfig["collect_ec2_tags"] = _is_affirmative(config.get("Main", "collect_ec2_tags"))
+
+        agentConfig["collect_orchestrator_tags"] = True
+        if config.has_option("Main", "collect_orchestrator_tags"):
+            agentConfig["collect_orchestrator_tags"] = _is_affirmative(config.get("Main", "collect_orchestrator_tags"))
 
         agentConfig["utf8_decoding"] = False
         if config.has_option("Main", "utf8_decoding"):
