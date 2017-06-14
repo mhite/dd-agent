@@ -126,9 +126,6 @@ class SDDockerBackend(AbstractSDBackend):
     def update_checks(self, changed_containers):
         state = self._make_fetch_state()
 
-        if Platform.is_k8s():
-            self.kubeutil.check_services_cache_freshness()
-
         conf_reload_set = set()
         for c_id in changed_containers:
             checks = self._get_checks_to_refresh(state, c_id)
@@ -359,9 +356,6 @@ class SDDockerBackend(AbstractSDBackend):
             self.dockerutil.image_name_extractor(container),
             container.get('Id'), container.get('Labels')
         ) for container in self.docker_client.containers()]
-
-        if Platform.is_k8s():
-            self.kubeutil.check_services_cache_freshness()
 
         for image, cid, labels in containers:
             try:
