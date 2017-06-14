@@ -387,16 +387,6 @@ class KubeUtil:
 
         return None
 
-    def check_services_cache_freshness(self):
-        """
-        Entry point for sd_docker_backend to check whether to invalidate the cached services
-        For now, we remove the whole cache as the fill_service_cache logic
-        doesn't handle partial lookups
-
-        We use the event's resourceVersion, as using the service's version wouldn't catch deletion
-        """
-        return self._service_mapper.check_services_cache_freshness()
-
     def match_services_for_pod(self, pod_metadata, refresh=False):
         """
         Match the pods labels with services' label selectors to determine the list
@@ -408,11 +398,11 @@ class KubeUtil:
         #log.warning("Matches for %s: %s" % (pod_metadata.get('name'), str(s)))
         return s
 
-    def get_event_retriever(self, namespaces=None, kinds=None):
+    def get_event_retriever(self, namespaces=None, kinds=None, delay=None):
         """
         Returns a KubeEventRetriever object ready for action
         """
-        return KubeEventRetriever(self, namespaces, kinds)
+        return KubeEventRetriever(self, namespaces, kinds, delay)
 
     def match_containers_for_pods(self, pod_uids, podlist=None):
         """
